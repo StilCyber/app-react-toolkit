@@ -1,28 +1,22 @@
-import { useSelector } from "react-redux"
 import "./App.css"
 import { useAppDispatch, useAppSelector } from "./hooks/redux"
-import { counterSlice } from "./store/reducers/UserSlice"
-
+import { useEffect } from "react"
+import { fetchUsers } from "./store/reducers/ActionCreators"
 
 function App() {
-
-  const {count, random} = useAppSelector(state => state.counter)
   const dispatch = useAppDispatch()
+  const { users, isLoading, error } = useAppSelector((state) => state.users)
 
-  const {increment, randomizer} = counterSlice.actions
-
-  const counter = () => {
-    dispatch(increment())
-    dispatch(randomizer(Math.random()))
-
-
-  }
+  useEffect(() => {
+    dispatch(fetchUsers())
+  }, [])
 
   return (
     <div className="App">
-      <div>{count}</div>
-      <div>{random}</div>
-      <button onClick={counter}>Increment</button>
+      {isLoading && <h1>Loading...</h1>}
+      {error && <h1>{error}</h1>}
+      <div>{JSON.stringify(users, null, 2)}</div>
+      <div></div>
     </div>
   )
 }

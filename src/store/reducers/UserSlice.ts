@@ -1,35 +1,32 @@
 import { IUser } from "../../models/IUser"
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { fetchUsers } from "./ActionCreators"
 
 interface UserState {
-    users: IUser[]
-    isLoading: boolean
-    error: string
-    count: number
-    random: number
+  users: IUser[]
+  isLoading: boolean
+  error: string
 }
 
 const initialState: UserState = {
-    users: [],
-    isLoading: false,
-    error: '', 
-    count: 1,
-    random: 0
+  users: [],
+  isLoading: false,
+  error: "",
 }
 
-export const counterSlice = createSlice({
-    name: 'counter',
-    initialState,
-    reducers: {
-        increment: state => {
-            state.count +=1
-        },
-        randomizer: (state, action: PayloadAction<number>) => {
-            state.random = action.payload
-        }
-    }
+export const usersSlice = createSlice({
+  name: "users",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchUsers.pending, (state) => {
+        state.isLoading = true
+    }),
+    builder.addCase(fetchUsers.fulfilled, (state, action: PayloadAction<IUser[]>) => {
+        state.users = action.payload
+    })
+    
+  },
 })
 
-
-export default  counterSlice.reducer
+export default usersSlice.reducer
